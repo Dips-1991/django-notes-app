@@ -1,6 +1,6 @@
 version : "3.3"
 services :
-  web :
-     image : trainwithshubham/my-note-app:latest
+  Web :
+     image : django-app-image:v1
      ports :
          - "8000:8000"
