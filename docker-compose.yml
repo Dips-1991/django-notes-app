@@ -1,6 +1,6 @@
 version : "3.3"
 services :
   Web :
-     image : django-app-image:v1
+     image : deepak1603/django-app-image:v1
      ports :
          - "8000:8000"
