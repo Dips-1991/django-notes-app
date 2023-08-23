@@ -1,35 +1,36 @@
-pipeline {
-    agent any 
-    
+pipeline{
+    agent any
     stages{
-        stage("Clone Code"){
-            steps {
-                echo "Cloning the code"
-                git url:"https://github.com/LondheShubham153/django-notes-app.git", branch: "main"
+        stage("Clone"){
+            steps{
+                echo "Cloning The Code"
+                git url:"https://github.com/Dips-1991/django-notes-app.git", branch:"main"
             }
         }
         stage("Build"){
-            steps {
-                echo "Building the image"
-                sh "docker build -t my-note-app ."
-            }
+            steps{
+                echo "Building The code"
+                sh "docker build -t django-app-image ."
+            }    
         }
-        stage("Push to Docker Hub"){
-            steps {
-                echo "Pushing the image to docker hub"
-                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
-                sh "docker tag my-note-app ${env.dockerHubUser}/my-note-app:latest"
-                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-                sh "docker push ${env.dockerHubUser}/my-note-app:latest"
+        stage("Push"){
+            steps{
+                echo "Pushing The Image To DockerHub"
+                sh "docker images"
+                withCredentials([usernamePassword(credentialsId:"DockerHubCredentials", passwordVariable:"dockerPassword", usernameVariable:"dockerUsername")])
+                {
+                sh "docker tag django-app-image ${env.dockerUsername}/django-app-image:v1"
+                sh "docker login -u ${env.dockerUsername} -p ${env.dockerPassword}"
+                sh "docker push ${env.dockerUsername}/django-app-image:v1"
                 }
             }
         }
         stage("Deploy"){
-            steps {
-                echo "Deploying the container"
+            steps{
+                echo "Deploying The Application"
                 sh "docker-compose down && docker-compose up -d"
-                
             }
         }
+    
     }
 }
